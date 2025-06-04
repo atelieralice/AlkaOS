@@ -3,4 +3,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Kernel\" />
+    <Folder Include="Concurrency\" />
+    <Folder Include="UI\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
 </Project>
