@@ -46,3 +46,53 @@ public class RoundRobinScheduler : IScheduler {
         return readyQueue.ToArray ( );
     }
 }
+
+// public class MLFQScheduler : IScheduler {
+//     private readonly List<Queue<PCB>> queues;
+//     private readonly int[] timeQuanta;
+//     private readonly int numQueues;
+//     private readonly int boostInterval;
+//     private int ticksSinceBoost = 0;
+
+//     public MLFQScheduler ( int numQueues = 3, int[] quanta = null, int boostInterval = 100 ) {
+//         this.numQueues = numQueues;
+//         queues = new List<Queue<PCB>> ( );
+//         for ( int i = 0; i < numQueues; i++ )
+//             queues.Add ( new Queue<PCB> ( ) );
+//         timeQuanta = quanta ?? new int[] {10, 20, 40};
+//         this.boostInterval = boostInterval;
+//     }
+
+//     public void AddProcess ( PCB process ) {
+//         queues[0].Enqueue ( process );
+//     }
+
+//     public void RemoveProcess ( int pid ) {
+//         // Remove process from all queues
+//         foreach ( var queue in queues ) {
+//             var temp = new Queue<PCB> ( );
+//             while ( queue.Count > 0 ) {
+//                 var pcb = queue.Dequeue ( );
+//                 if ( pcb.ProcessID != pid )
+//                     temp.Enqueue ( pcb );
+//             }
+//             while ( temp.Count > 0 )
+//                 queue.Enqueue ( temp.Dequeue ( ) );
+//         }
+//     }
+
+//     public PCB GetNextProcess ( ) {
+//         // Always pick from the highest non-empty queue
+//         for ( int i = 0; i < numQueues; i++ ) {
+//             if ( queues[i].Count > 0 )
+//                 return queues[i].Peek ( ); // For now, just peek; you'll want to handle time slices and demotion later
+//         }
+//         return null;
+//     }
+
+//     public IEnumerable<PCB> GetReadyQueue ( ) {
+//         foreach ( var queue in queues )
+//             foreach ( var pcb in queue )
+//                 yield return pcb;
+//     }
+// }
