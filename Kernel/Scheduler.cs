@@ -14,9 +14,9 @@ public interface IScheduler {
 }
 
 public class RoundRobinScheduler : IScheduler {
+    private readonly Queue<PCB> readyQueue = new Queue<PCB> ( );
+
     public int TimeQuantum { get; set; } = 2;
-    
-    public readonly Queue<PCB> readyQueue = new Queue<PCB> ( );
 
     public void AddProcess ( PCB process ) {
         readyQueue.Enqueue ( process );
@@ -29,15 +29,15 @@ public class RoundRobinScheduler : IScheduler {
             if ( pcb.ProcessID != pid )
                 tempQueue.Enqueue ( pcb );
         }
-        readyQueue.Clear();
-        while (tempQueue.Count > 0)
-            readyQueue.Enqueue(tempQueue.Dequeue());
+        readyQueue.Clear ( );
+        while ( tempQueue.Count > 0 )
+            readyQueue.Enqueue ( tempQueue.Dequeue ( ) );
     }
 
-    public PCB GetNextProcess ( ) {
+    public PCB GetNextProcess ( ) { // possible edge case
         if ( readyQueue.Count == 0 )
             return null;
-        PCB pcb = readyQueue.Dequeue();
+        PCB pcb = readyQueue.Dequeue ( );
         readyQueue.Enqueue ( pcb );
         return pcb;
     }
