@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://uqpfkdnaxaaa"]
+[gd_scene load_steps=4 format=3 uid="uid://uqpfkdnaxaaa"]
 
 [ext_resource type="Script" uid="uid://dqndj65lwydeo" path="res://Kernel/Kernel.cs" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://dxqm4tieipcxv" path="res://Main.cs" id="1_uu6xs"]
+[ext_resource type="Script" uid="uid://bulp2ltdcylat" path="res://GUI/ProcessVisualizer.cs" id="2_uu6xs"]
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_uu6xs")
+
+[node name="Kernel" type="Node2D" parent="."]
+unique_name_in_owner = true
 script = ExtResource("1_ig7tw")
+
+[node name="ProcessVisualizer" type="Node2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_uu6xs")

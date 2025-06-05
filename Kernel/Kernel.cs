@@ -6,7 +6,10 @@ using System.Collections.Generic;
 namespace AlkaOS.Kernel;
 
 public partial class Kernel : Node2D {
-    private IScheduler scheduler = new RoundRobinScheduler ( );
+    [Signal]
+    public delegate void ProcessCreatedEventHandler ( int pid, string name, int Priority );
+
+    private IScheduler scheduler = new MLFQScheduler ( );
     private List<PCB> allProcesses = [];
 
     public IEnumerable<PCB> GetAllProcesses ( ) => allProcesses;
@@ -16,6 +19,8 @@ public partial class Kernel : Node2D {
         // pcb.State = ProcessState.READY;
         allProcesses.Add ( pcb );
         scheduler.AddProcess ( pcb );
+        // Let ProcessVisualizer know when a process is created
+        EmitSignal ( SignalName.ProcessCreated, pid, name, priority );
     }
     public void SwitchProcess ( ) {
         // Set the currently running process to READY
@@ -23,14 +28,12 @@ public partial class Kernel : Node2D {
         if (running != null) {
             running.State = ProcessState.READY;
         }
-
         // Get the next process from the scheduler and set it to RUNNING
         PCB next = scheduler.GetNextProcess();
         if (next != null) {
             next.State = ProcessState.RUNNING;
         }
     }
-
     public void TerminateProcess ( int pid ) {
         PCB pcb = allProcesses.Find ( p => p.ProcessID == pid );
         if ( pcb != null ) {
