@@ -14,7 +14,9 @@ public interface IScheduler {
 }
 
 public class RoundRobinScheduler : IScheduler {
-    public readonly Queue<PCB> readyQueue = new Queue<PCB>();
+    public int TimeQuantum { get; set; } = 2;
+    
+    public readonly Queue<PCB> readyQueue = new Queue<PCB> ( );
 
     public void AddProcess ( PCB process ) {
         readyQueue.Enqueue ( process );
