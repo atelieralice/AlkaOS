@@ -11,6 +11,7 @@ public partial class Debug : Node2D {
 	public override void _Ready ( ) {
 		kernel.CreateProcess ( 5234, "Firefox", 3 );
 		kernel.CreateProcess ( 305, "Zoom", 2 );
+		kernel.CreateProcess ( 4525, "Spotify", 5 );
 		WriteProcessInfo.PrintAll ( kernel );
 		GD.Print ( );
 

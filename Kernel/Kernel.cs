@@ -16,17 +16,17 @@ public partial class Kernel : Node2D {
         allProcesses.Add ( pcb );
         scheduler.AddProcess ( pcb );
     }
-
     public void SwitchProcess ( ) {
-        foreach ( var pcb in allProcesses ) {
-            if ( pcb.State == ProcessState.RUNNING ) {
-                pcb.State = ProcessState.READY;
-            }
+        // Set the currently running process to READY
+        var running = allProcesses.Find(pcb => pcb.State == ProcessState.RUNNING);
+        if (running != null) {
+            running.State = ProcessState.READY;
+        }
 
-            PCB next = scheduler.GetNextProcess ( );
-            if ( next != null ) {
-                next.State = ProcessState.RUNNING;
-            }
+        // Get the next process from the scheduler and set it to RUNNING
+        PCB next = scheduler.GetNextProcess();
+        if (next != null) {
+            next.State = ProcessState.RUNNING;
         }
     }
 
