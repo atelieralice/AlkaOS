@@ -8,7 +8,7 @@ namespace AlkaOS.Kernel;
 public partial class Kernel : Node2D {
     private IScheduler scheduler = new RoundRobinScheduler ( );
     private List<PCB> allProcesses = [];
-    
+
     public IEnumerable<PCB> GetAllProcesses ( ) => allProcesses;
 
     public void CreateProcess ( int pid, string name, int priority ) {
@@ -18,9 +18,15 @@ public partial class Kernel : Node2D {
     }
 
     public void SwitchProcess ( ) {
-        PCB next = scheduler.GetNextProcess ( );
-        if ( next != null ) {
-            next.State = ProcessState.RUNNING;
+        foreach ( var pcb in allProcesses ) {
+            if ( pcb.State == ProcessState.RUNNING ) {
+                pcb.State = ProcessState.READY;
+            }
+
+            PCB next = scheduler.GetNextProcess ( );
+            if ( next != null ) {
+                next.State = ProcessState.RUNNING;
+            }
         }
     }
 
