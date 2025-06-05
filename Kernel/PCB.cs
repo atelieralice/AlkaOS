@@ -26,6 +26,8 @@ public class PCB {
     public int CpuTimeUsed { get; set; } // Used CPU time
     public int ExitCode { get; set; } = 0;
     public string WaitingReason { get; set; }
+    public int QueueLevel { get; set; } = 0;
+    public int TimeUsedAtLevel { get; set; } = 0;
 
     public PCB ( int pid, string name, int priority, int parentPid = -1 ) {
         ProcessID = pid;

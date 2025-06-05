@@ -13,7 +13,7 @@ public partial class Kernel : Node2D {
 
     public void CreateProcess ( int pid, string name, int priority ) {
         PCB pcb = new PCB ( pid, name, priority );
-        pcb.State = ProcessState.READY;
+        // pcb.State = ProcessState.READY;
         allProcesses.Add ( pcb );
         scheduler.AddProcess ( pcb );
     }
