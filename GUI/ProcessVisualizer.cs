@@ -1,56 +1,77 @@
 using Godot;
-using System;
-using System.Collections.Generic;
+using System.Linq;
 
-public partial class ProcessVisualizer : Node2D {
-	private AlkaOS.Kernel.Kernel kernel;
-	private List<ColorRect> processRects = new List<ColorRect> ( );
-	private int rectWidth = 120;
-	private int rectHeight = 48;
-	private int margin = 16;
+namespace AlkaOS.GUI
+{
+    public partial class ProcessVisualizer : Node2D
+    {
+        private AlkaOS.Kernel.Kernel kernel;
+        private int rectWidth = 120;
+        private int rectHeight = 48;
+        private int margin = 16;
+        private int queueMargin = 48;
 
-	public override void _Ready ( ) {
-		// Get the sibling node named "Kernel"
-		kernel = GetNode<AlkaOS.Kernel.Kernel> ( "%Kernel" );
-		kernel.ProcessCreated += OnProcessCreated;
-		QueueRedraw ( );
-	}
+        public override void _Ready()
+        {
+            Position = new Vector2(0, 0);
+            kernel = GetNode<AlkaOS.Kernel.Kernel>("%Kernel");
+            kernel.ProcessCreated += OnProcessCreated;
+            QueueRedraw();
+        }
 
-	public override void _ExitTree ( ) {
-		// Unsubscribe to avoid memory leaks
-		if ( kernel != null )
-			kernel.ProcessCreated -= OnProcessCreated;
-	}
+        public override void _ExitTree()
+        {
+            if (kernel != null)
+                kernel.ProcessCreated -= OnProcessCreated;
+        }
 
-	public override void _Process ( double delta ) {
-	}
+        private void OnProcessCreated(int pid, string name, int priority)
+        {
+            QueueRedraw();
+        }
 
-	public void OnProcessCreated ( int pid, string name, int priority ) {
-		var rect = new ColorRect ( );
-		rect.Color = GetColorForPriority ( priority );
-		rect.Size = new Vector2 ( rectWidth, rectHeight );
+        public override void _Process(double delta) { }
 
-		// Arrange rectangles in a vertical list, centered horizontally
-		int index = processRects.Count;
-		float x = ( 1152 - rectWidth ) / 2;
-		float y = margin + index * ( rectHeight + margin );
-		rect.Position = new Vector2 ( x, y );
+        public override void _Draw()
+        {
+            if (kernel == null)
+                return;
 
-		// Optional: Add a label for process name and PID
-		var label = new Label ( );
-		label.Text = $"{name} (PID: {pid})";
-		label.Size = rect.Size;
-		label.HorizontalAlignment = HorizontalAlignment.Center;
-		label.VerticalAlignment = VerticalAlignment.Center;
-		rect.AddChild ( label );
+            // Group processes by state (READY, RUNNING, WAITING, etc.)
+            var processes = kernel.GetAllProcesses().ToList();
+            var stateGroups = processes.GroupBy(p => p.State).ToList();
 
-		AddChild ( rect );
-		processRects.Add ( rect );
-	}
+            float y = margin;
+            foreach (var group in stateGroups)
+            {
+                // Draw queue/state label
+                DrawString(GetFont(), new Vector2(margin, y - 8), group.Key.ToString(), HorizontalAlignment.Left, -1, 16, new Color(0.8f, 0.8f, 0.8f));
 
-	private Color GetColorForPriority ( int priority ) {
-		// Assign a color based on priority (example: lower = greener, higher = redder)
-		float t = Mathf.Clamp ( priority / 10.0f, 0, 1 );
-		return new Color ( 1.0f * t, 1.0f - t, 0.4f + 0.3f * ( 1 - t ) );
-	}
+                int i = 0;
+                foreach (var pcb in group)
+                {
+                    float x = margin + i * (rectWidth + margin);
+                    var rect = new Rect2(x, y, rectWidth, rectHeight);
+                    DrawRect(rect, GetColorForPriority(pcb.Priority));
+                    // Draw process label
+                    DrawString(GetFont(), new Vector2(x + 8, y + rectHeight / 2 + 8), $"{pcb.ProcessName} (PID:{pcb.ProcessID})", HorizontalAlignment.Left, -1, 16, Colors.Black);
+                    i++;
+                }
+                y += rectHeight + queueMargin;
+            }
+        }
+
+        private static Font GetFont()
+        {
+            // Use the default font
+            var defaultFont = ThemeDB.FallbackFont;
+            return defaultFont;
+        }
+
+        private static Color GetColorForPriority(int priority)
+        {
+            float t = Mathf.Clamp(priority / 10.0f, 0, 1);
+            return new Color(1.0f * t, 1.0f - t, 0.4f + 0.3f * (1 - t));
+        }
+    }
 }
