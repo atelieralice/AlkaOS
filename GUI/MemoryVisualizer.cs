@@ -1,8 +1,11 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class MemoryVisualizer : Node2D {
     private AlkaOS.Kernel.MemoryManager memoryManager;
+    private HashSet<int> faultyFrames = new HashSet<int>();
+    private HashSet<int> swappedFrames = new HashSet<int>();
 
     // Visualization settings
     private int cellSize = 24; // Size of each memory cell (rectangle)
@@ -14,6 +17,7 @@ public partial class MemoryVisualizer : Node2D {
         var kernel = GetNode<AlkaOS.Kernel.Kernel> ( "%Kernel" );
         memoryManager = kernel.GetMemoryManager ( );
         memoryManager.MemoryChanged += OnMemoryChanged;
+        UpdateFrameSets();
         QueueRedraw ( );
     }
 
@@ -27,7 +31,13 @@ public partial class MemoryVisualizer : Node2D {
     }
 
     public void OnMemoryChanged ( ) {
+        UpdateFrameSets();
         QueueRedraw ( );
+    }
+
+    private void UpdateFrameSets() {
+        faultyFrames = memoryManager.GetFaultyFrames();
+        swappedFrames = memoryManager.GetSwappedFrames();
     }
 
     public override void _Draw ( ) {
@@ -38,7 +48,15 @@ public partial class MemoryVisualizer : Node2D {
         for ( int i = 0; i < owners.Length; i++ ) {
             int x = ( i % columns ) * cellSize;
             int y = ( i / columns ) * cellSize;
-            Color color = owners[i] == -1 ? Colors.Gray : GetColorForProcess ( owners[i] );
+            Color color;
+            if (faultyFrames.Contains(i))
+                color = Colors.Red;
+            else if (swappedFrames.Contains(i))
+                color = Colors.Blue;
+            else if (owners[i] == -1)
+                color = Colors.Gray;
+            else
+                color = GetColorForProcess ( owners[i] );
             DrawRect ( new Rect2 ( x, y, cellSize - 2, cellSize - 2 ), color );
         }
     }
