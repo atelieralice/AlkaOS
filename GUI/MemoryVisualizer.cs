@@ -2,10 +2,12 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+namespace AlkaOS.GUI;
+
 public partial class MemoryVisualizer : Node2D {
     private AlkaOS.Kernel.MemoryManager memoryManager;
-    private HashSet<int> faultyFrames = new HashSet<int>();
-    private HashSet<int> swappedFrames = new HashSet<int>();
+    private HashSet<int> faultyFrames = new HashSet<int> ( );
+    private HashSet<int> swappedFrames = new HashSet<int> ( );
 
     // Visualization settings
     private int cellSize = 24; // Size of each memory cell (rectangle)
@@ -13,12 +15,12 @@ public partial class MemoryVisualizer : Node2D {
     private int rows = 8;      // 256 frames / 32 columns = 8 rows
 
     public override void _Ready ( ) {
-        Position = new Vector2(0, 400);
+        Position = new Vector2 ( 0, 400 );
         // Get the sibling node named "Kernel" and access its MemoryManager
         var kernel = GetNode<AlkaOS.Kernel.Kernel> ( "%Kernel" );
         memoryManager = kernel.GetMemoryManager ( );
         memoryManager.MemoryChanged += OnMemoryChanged;
-        UpdateFrameSets();
+        UpdateFrameSets ( );
         QueueRedraw ( );
     }
 
@@ -32,13 +34,13 @@ public partial class MemoryVisualizer : Node2D {
     }
 
     public void OnMemoryChanged ( ) {
-        UpdateFrameSets();
+        UpdateFrameSets ( );
         QueueRedraw ( );
     }
 
-    private void UpdateFrameSets() {
-        faultyFrames = memoryManager.GetFaultyFrames();
-        swappedFrames = memoryManager.GetSwappedFrames();
+    private void UpdateFrameSets ( ) {
+        faultyFrames = memoryManager.GetFaultyFrames ( );
+        swappedFrames = memoryManager.GetSwappedFrames ( );
     }
 
     public override void _Draw ( ) {
@@ -50,11 +52,11 @@ public partial class MemoryVisualizer : Node2D {
             int x = ( i % columns ) * cellSize;
             int y = ( i / columns ) * cellSize;
             Color color;
-            if (faultyFrames.Contains(i))
+            if ( faultyFrames.Contains ( i ) )
                 color = Colors.Red;
-            else if (swappedFrames.Contains(i))
+            else if ( swappedFrames.Contains ( i ) )
                 color = Colors.Blue;
-            else if (owners[i] == -1)
+            else if ( owners[i] == -1 )
                 color = Colors.Gray;
             else
                 color = GetColorForProcess ( owners[i] );
