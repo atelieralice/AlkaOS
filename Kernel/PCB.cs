@@ -28,6 +28,7 @@ public class PCB {
     public string WaitingReason { get; set; }
     public int QueueLevel { get; set; } = 0;
     public int TimeUsedAtLevel { get; set; } = 0;
+    public Dictionary<int, int> PageTable { get; set; } // virtual page -> physical frame
 
     public PCB ( int pid, string name, int priority, int parentPid = -1 ) {
         ProcessID = pid;
@@ -36,6 +37,7 @@ public class PCB {
         ParentPID = parentPid;
         State = ProcessState.NEW;
         CreationTime = DateTime.Now;
+        PageTable = new Dictionary<int, int> ( );
 
         Registers = new Dictionary<string, int> {
             { "EAX", 0 },

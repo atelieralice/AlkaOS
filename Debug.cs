@@ -34,6 +34,7 @@ public partial class Debug : Node2D {
 		kernel.SwitchProcess ( );
 		WriteProcessInfo.PrintAll ( kernel );
 		GD.Print ( );
+		throw new Exception ( "Not enough memory!" );
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
