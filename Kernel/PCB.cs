@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using AlkaOS.Kernel.Threading;
 
 namespace AlkaOS.Kernel;
 
@@ -29,6 +30,7 @@ public class PCB {
     public int QueueLevel { get; set; } = 0;
     public int TimeUsedAtLevel { get; set; } = 0;
     public Dictionary<int, int> PageTable { get; set; } // virtual page -> physical frame
+    public List<SimThread> Threads { get; set; }
 
     public PCB ( int pid, string name, int priority, int parentPid = -1 ) {
         ProcessID = pid;
@@ -38,6 +40,7 @@ public class PCB {
         State = ProcessState.NEW;
         CreationTime = DateTime.Now;
         PageTable = new Dictionary<int, int> ( );
+        Threads = new List<SimThread> ( );
 
         Registers = new Dictionary<string, int> {
             { "EAX", 0 },
