@@ -1,45 +1,66 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 using AlkaOS.Kernel;
 using AlkaOS.Kernel.Scheduling;
 using System.Linq;
 
 public partial class Main : Node2D {
-	private Kernel kernel;
+    private Kernel kernel;
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready ( ) {
-		// Get the Kernel node from the scene tree
-		kernel = GetNode<Kernel> ( "Kernel" );
+    public override void _Ready() {
+        kernel = GetNode<Kernel>("Kernel");
+        _ = RunDebugSequence();
+    }
 
-		kernel.CreateProcess ( 5234, "Firefox", 3 );
-		kernel.CreateProcess ( 305, "Zoom", 2 );
-		kernel.CreateProcess ( 4525, "Spotify", 5 );
-		WriteProcessInfo.PrintAll ( kernel );
-		GD.Print ( );
+    private async Task RunDebugSequence() {
+        // Add first process
+        kernel.CreateProcess(5234, "Firefox", 3);
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
-		kernel.SwitchProcess ( );
-		WriteProcessInfo.PrintAll ( kernel );
-		GD.Print ( );
+        // Add second process
+        kernel.CreateProcess(305, "Zoom", 2);
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
-		kernel.SwitchProcess ( );
-		WriteProcessInfo.PrintAll ( kernel );
-		GD.Print ( );
+        // Switch before adding more
+        kernel.SwitchProcess();
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
-		kernel.TerminateProcess ( 5234 );
-		WriteProcessInfo.PrintAll ( kernel );
-		GD.Print ( );
+        // Add third process later
+        kernel.CreateProcess(4525, "Spotify", 5);
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
-		kernel.SwitchProcess ( );
-		WriteProcessInfo.PrintAll ( kernel );
-		GD.Print ( );
+        // Add fourth process even later
+        kernel.CreateProcess(1001, "VSCode", 1);
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
-		kernel.SwitchProcess ( );
-		WriteProcessInfo.PrintAll ( kernel );
-		GD.Print ( );
-	}
+        // Switch and terminate in between
+        kernel.SwitchProcess();
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process ( double delta ) {
-	}
+        kernel.TerminateProcess(5234);
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
+
+        // Add another process after some terminations
+        kernel.CreateProcess(2002, "Terminal", 4);
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
+
+        kernel.SwitchProcess();
+        WriteProcessInfo.PrintAll(kernel);
+        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
+
+        kernel.SwitchProcess();
+        WriteProcessInfo.PrintAll(kernel);
+        // No need to wait at the end
+    }
+
+    public override void _Process(double delta) { }
 }
