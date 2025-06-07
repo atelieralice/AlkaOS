@@ -15,7 +15,7 @@ public partial class MemoryVisualizer : Node2D {
     private int rows = 8;      // 256 frames / 32 columns = 8 rows
 
     public override void _Ready ( ) {
-        Position = new Vector2 ( 0, 400 );
+        Position = new Vector2 ( 24, 400 );
         // Get the sibling node named "Kernel" and access its MemoryManager
         var kernel = GetNode<AlkaOS.Kernel.Kernel> ( "%Kernel" );
         memoryManager = kernel.GetMemoryManager ( );

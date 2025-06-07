@@ -16,6 +16,11 @@ config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
+[display]
+
+window/energy_saving/keep_screen_on=false
+window/stretch/mode="canvas_items"
+
 [dotnet]
 
 project/assembly_name="AlkaOS"

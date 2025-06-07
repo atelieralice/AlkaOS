@@ -31,9 +31,9 @@ offset_right = 1112.0
 offset_bottom = 280.0
 
 [node name="GridContainer" type="GridContainer" parent="."]
-offset_left = 960.0
+offset_left = 976.0
 offset_top = 488.0
-offset_right = 1112.0
+offset_right = 1128.0
 offset_bottom = 589.0
 
 [node name="AddProcess" type="Button" parent="GridContainer"]

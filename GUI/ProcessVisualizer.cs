@@ -12,7 +12,7 @@ public partial class ProcessVisualizer : Node2D {
     private int queueMargin = 48;
 
     public override void _Ready ( ) {
-        Position = new Vector2 ( 0, 0 );
+        Position = new Vector2 ( 5, 20 );
         kernel = GetNode<AlkaOS.Kernel.Kernel> ( "%Kernel" );
         kernel.ProcessCreated += OnProcessCreated;
         QueueRedraw ( );
@@ -33,9 +33,20 @@ public partial class ProcessVisualizer : Node2D {
         if ( kernel == null )
             return;
 
-        // Group processes by state (READY, RUNNING, WAITING, etc.)
-        var processes = kernel.GetAllProcesses ( ).ToList ( );
-        var stateGroups = processes.GroupBy ( p => p.State ).ToList ( );
+        // Group processes by state (READY, RUNNING, TERMINATED, etc.)
+        var processes = kernel.GetAllProcesses().ToList();
+
+        // Define the desired order
+        string[] stateOrder = { "READY", "RUNNING", "TERMINATED" };
+
+        // Group by state and order by our custom order, unknown states go last
+        var stateGroups = processes
+            .GroupBy(p => p.State)
+            .OrderBy(g => {
+                int idx = System.Array.IndexOf(stateOrder, g.Key.ToString());
+                return idx == -1 ? int.MaxValue : idx;
+            })
+            .ToList();
 
         float y = margin;
         foreach ( var group in stateGroups ) {
