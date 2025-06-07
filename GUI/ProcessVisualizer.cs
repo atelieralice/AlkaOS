@@ -5,6 +5,7 @@ namespace AlkaOS.GUI;
 
 public partial class ProcessVisualizer : Node2D {
     private AlkaOS.Kernel.Kernel kernel;
+
     private int rectWidth = 120;
     private int rectHeight = 48;
     private int margin = 16;
@@ -38,16 +39,16 @@ public partial class ProcessVisualizer : Node2D {
 
         float y = margin;
         foreach ( var group in stateGroups ) {
-            // Draw queue/state label
-            DrawString ( GetFont ( ), new Vector2 ( margin, y - 8 ), group.Key.ToString ( ), HorizontalAlignment.Left, -1, 16, new Color ( 0.8f, 0.8f, 0.8f ) );
+            // Draw queue/state label with smaller font size
+            DrawString ( GetFont ( ), new Vector2 ( margin, y - 8 ), group.Key.ToString ( ), HorizontalAlignment.Left, -1, 12, new Color ( 0.8f, 0.8f, 0.8f ) );
 
             int i = 0;
             foreach ( var pcb in group ) {
                 float x = margin + i * ( rectWidth + margin );
                 var rect = new Rect2 ( x, y, rectWidth, rectHeight );
                 DrawRect ( rect, GetColorForPriority ( pcb.Priority ) );
-                // Draw process label
-                DrawString ( GetFont ( ), new Vector2 ( x + 8, y + rectHeight / 2 + 8 ), $"{pcb.ProcessName} (PID:{pcb.ProcessID})", HorizontalAlignment.Left, -1, 16, Colors.Black );
+                // Draw process label with smaller font size
+                DrawString ( GetFont ( ), new Vector2 ( x + 8, y + rectHeight / 2 + 6 ), $"{pcb.ProcessName} (PID:{pcb.ProcessID})", HorizontalAlignment.Left, -1, 12, Colors.Black );
                 i++;
             }
             y += rectHeight + queueMargin;
