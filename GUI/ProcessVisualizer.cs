@@ -51,14 +51,36 @@ public partial class ProcessVisualizer : Node2D {
         float y = margin;
         foreach ( var group in stateGroups ) {
             // Draw queue/state label with smaller font size and beige color
+            var labelText = group.Key.ToString();
+            var labelPos = new Vector2(margin, y - 8);
+            var labelColor = new Color("#F5F5DC"); // Beige color
+
+            // Only add outline for READY, RUNNING, TERMINATED
+            if (labelText == "READY" || labelText == "RUNNING" || labelText == "TERMINATED") {
+                // Draw very thin black outline (just 4 directions)
+                int outlineThickness = 1;
+                foreach (var offset in new[] { new Vector2(-outlineThickness, 0), new Vector2(outlineThickness, 0), new Vector2(0, -outlineThickness), new Vector2(0, outlineThickness) }) {
+                    DrawString(
+                        GetFont(),
+                        labelPos + offset,
+                        labelText,
+                        HorizontalAlignment.Left,
+                        -1,
+                        12,
+                        Colors.Black
+                    );
+                }
+            }
+
+            // Draw main label in beige
             DrawString(
                 GetFont(),
-                new Vector2(margin, y - 8),
-                group.Key.ToString(),
+                labelPos,
+                labelText,
                 HorizontalAlignment.Left,
                 -1,
                 12,
-                new Color("#F5F5DC") // Beige color
+                labelColor
             );
 
             int i = 0;
@@ -74,7 +96,7 @@ public partial class ProcessVisualizer : Node2D {
                     HorizontalAlignment.Left,
                     -1,
                     12,
-                    new Color("#F5F5DC") // Beige color
+                    new Color("#F5F5DC")
                 );
                 i++;
             }
