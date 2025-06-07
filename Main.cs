@@ -77,7 +77,7 @@ public partial class Main : Node2D {
         do {
             pid = random.Next(1000, 9999);
         } while (existingPids.Contains(pid));
-        string[] names = { "Firefox", "Zoom", "Spotify", "VSCode", "Terminal", "Edge", "Discord", "Chrome", "Explorer" };
+        string[] names = { "Firefox", "Zoom", "Spotify", "VSCode", "Terminal", "Edge", "WhatsApp", "Chrome", "Explorer" };
         string name = names[random.Next(names.Length)];
         int priority = random.Next(1, 6);
         kernel.CreateProcess(pid, name, priority);

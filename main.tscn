@@ -1,15 +1,23 @@
-[gd_scene load_steps=8 format=3 uid="uid://dx4yderofy2h5"]
+[gd_scene load_steps=10 format=3 uid="uid://dx4yderofy2h5"]
 
 [ext_resource type="Script" uid="uid://dqndj65lwydeo" path="res://Kernel/Kernel.cs" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://dxqm4tieipcxv" path="res://Main.cs" id="1_uu6xs"]
+[ext_resource type="Texture2D" uid="uid://bvhpegmjtm6ak" path="res://steam_bg.png" id="2_trn2v"]
 [ext_resource type="Script" uid="uid://bulp2ltdcylat" path="res://GUI/ProcessVisualizer.cs" id="2_uu6xs"]
 [ext_resource type="Script" uid="uid://bylepkaunnma" path="res://GUI/MemoryVisualizer.cs" id="4_cm0pq"]
 [ext_resource type="Script" uid="uid://xbchnacqwgkn" path="res://Utils/AddProcess.cs" id="5_lgr22"]
+[ext_resource type="Theme" uid="uid://bef7cyfdovhtq" path="res://theme.tres" id="6_03owx"]
 [ext_resource type="Script" uid="uid://di50g44kkv1ss" path="res://Utils/SwitchToNextProcess.cs" id="6_trn2v"]
 [ext_resource type="Script" uid="uid://dx1apd6unbvm" path="res://Utils/TerminateProcess.cs" id="7_03owx"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_uu6xs")
+
+[node name="BG" type="Sprite2D" parent="."]
+position = Vector2(576, 325.5)
+scale = Vector2(0.6, 0.5972222)
+texture = ExtResource("2_trn2v")
+flip_h = true
 
 [node name="Kernel" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -23,34 +31,59 @@ script = ExtResource("2_uu6xs")
 unique_name_in_owner = true
 script = ExtResource("4_cm0pq")
 
-[node name="DemoLog" type="RichTextLabel" parent="."]
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("6_03owx")
+
+[node name="DemoLog" type="RichTextLabel" parent="UI"]
 unique_name_in_owner = true
-offset_left = 664.0
-offset_top = 24.0
-offset_right = 1112.0
-offset_bottom = 280.0
-
-[node name="GridContainer" type="GridContainer" parent="."]
-offset_left = 976.0
-offset_top = 488.0
+layout_mode = 0
+offset_left = 680.0
+offset_top = 112.0
 offset_right = 1128.0
-offset_bottom = 589.0
+offset_bottom = 368.0
 
-[node name="AddProcess" type="Button" parent="GridContainer"]
+[node name="Panel" type="Panel" parent="UI/DemoLog"]
+layout_mode = 0
+offset_right = 448.0
+offset_bottom = 256.0
+metadata/_edit_lock_ = true
+
+[node name="SimulateProblem" type="Button" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 904.0
+offset_top = 376.0
+offset_right = 1128.0
+offset_bottom = 438.0
+text = "Simulate Concurrency Problem"
+autowrap_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="UI"]
+layout_mode = 0
+offset_left = 976.0
+offset_top = 511.0
+offset_right = 1128.0
+offset_bottom = 612.0
+
+[node name="AddProcess" type="Button" parent="UI/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add Process"
 script = ExtResource("5_lgr22")
 metadata/_edit_lock_ = true
 
-[node name="SwitchProcess" type="Button" parent="GridContainer"]
+[node name="SwitchProcess" type="Button" parent="UI/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Switch Process"
 script = ExtResource("6_trn2v")
 metadata/_edit_lock_ = true
 
-[node name="SwitchPID" type="TextEdit" parent="GridContainer/SwitchProcess"]
+[node name="SwitchPID" type="TextEdit" parent="UI/GridContainer/SwitchProcess"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -60,14 +93,14 @@ offset_bottom = 31.0
 placeholder_text = "pid"
 emoji_menu_enabled = false
 
-[node name="TerminateProcess" type="Button" parent="GridContainer"]
+[node name="TerminateProcess" type="Button" parent="UI/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Terminate Process"
 script = ExtResource("7_03owx")
 metadata/_edit_lock_ = true
 
-[node name="TerminatePID" type="TextEdit" parent="GridContainer/TerminateProcess"]
+[node name="TerminatePID" type="TextEdit" parent="UI/GridContainer/TerminateProcess"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = -64.0

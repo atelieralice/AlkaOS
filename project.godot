@@ -11,10 +11,12 @@ config_version=5
 [application]
 
 config/name="AlkaOS"
+config/description="AlkaOS - An Alchemy Themed OS"
 run/main_scene="uid://dx4yderofy2h5"
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
+run/low_processor_mode=true
 boot_splash/show_image=false
-config/icon="res://icon.svg"
+config/icon="uid://dm6p8lw2uqsqs"
 
 [display]
 

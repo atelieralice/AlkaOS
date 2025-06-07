@@ -15,7 +15,7 @@ public partial class MemoryVisualizer : Node2D {
     private int rows = 8;      // 256 frames / 32 columns = 8 rows
 
     public override void _Ready ( ) {
-        Position = new Vector2 ( 24, 400 );
+        Position = new Vector2 ( 24, 420 );
         // Get the sibling node named "Kernel" and access its MemoryManager
         var kernel = GetNode<AlkaOS.Kernel.Kernel> ( "%Kernel" );
         memoryManager = kernel.GetMemoryManager ( );
@@ -57,7 +57,7 @@ public partial class MemoryVisualizer : Node2D {
             else if ( swappedFrames.Contains ( i ) )
                 color = Colors.Blue;
             else if ( owners[i] == -1 )
-                color = Colors.Gray;
+                color = Colors.DarkGray;
             else
                 color = GetColorForProcess ( owners[i] );
             DrawRect ( new Rect2 ( x, y, cellSize - 2, cellSize - 2 ), color );

@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://bef7cyfdovhtq"]
+
+[ext_resource type="StyleBox" uid="uid://brgfu0ds5ms6m" path="res://theme_button_normal.tres" id="1_e1x85"]
+
+[resource]
+Button/styles/hover = ExtResource("1_e1x85")
