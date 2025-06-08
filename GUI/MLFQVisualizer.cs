@@ -18,7 +18,7 @@ public partial class MLFQVisualizer : Node2D
         // Access the scheduler field directly, just like in Kernel.cs
         scheduler = kernel.GetType().GetField("scheduler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
             ?.GetValue(kernel) as AlkaOS.Kernel.Scheduling.MLFQScheduler;
-        Position = new Vector2(1000, 20); // Adjust X for your screen width
+        Position = new Vector2(184, 223); // Adjust X for your screen width
         QueueRedraw();
     }
 
