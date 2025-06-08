@@ -26,4 +26,14 @@ public class Lock {
             owner = null;
         }
     }
+
+    // Add this method for cleanup
+    public void Clear() {
+        // Set all waiting threads to READY before clearing
+        while (waitingThreads.Count > 0) {
+            var thread = waitingThreads.Dequeue();
+            thread.State = ThreadState.READY;
+        }
+        owner = null;
+    }
 }
