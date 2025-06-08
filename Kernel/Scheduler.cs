@@ -54,6 +54,9 @@ public class MLFQScheduler : IScheduler {
     private readonly int boostInterval;
     private int ticksSinceBoost = 0;
 
+    private PCB runningProcess = null;
+    private int runningQuantumLeft = 0;
+
     public MLFQScheduler ( int numQueues = 3, int[] quanta = null, int boostInterval = 100 ) {
         this.numQueues = numQueues;
         queues = new List<Queue<PCB>> ( );
@@ -81,60 +84,76 @@ public class MLFQScheduler : IScheduler {
             while ( temp.Count > 0 )
                 queue.Enqueue ( temp.Dequeue ( ) );
         }
+        if (runningProcess != null && runningProcess.ProcessID == pid)
+            runningProcess = null;
     }
 
-    public PCB GetNextProcess ( ) {
-        // Priority boost if needed
+    // Call this every tick (e.g. from Kernel or Node2D _PhysicsProcess)
+    public void Tick() {
         ticksSinceBoost++;
-        if ( ticksSinceBoost >= boostInterval ) {
-            BoostAllProcesses ( );
+        if (ticksSinceBoost >= boostInterval) {
+            BoostAllProcesses();
             ticksSinceBoost = 0;
         }
 
-        for ( int i = 0; i < numQueues; i++ ) {
-            if ( queues[i].Count > 0 ) {
-                var pcb = queues[i].Dequeue ( );
+        if (runningProcess == null) {
+            runningProcess = GetNextProcess();
+            if (runningProcess != null)
+                runningQuantumLeft = timeQuanta[runningProcess.QueueLevel];
+        }
 
-                // Simulate running for one time unit
-                pcb.TimeUsedAtLevel++;
+        if (runningProcess != null) {
+            runningProcess.TimeUsedAtLevel++;
+            runningQuantumLeft--;
 
-                // If process used up its time slice at this level, demote if not at lowest queue
-                if ( pcb.TimeUsedAtLevel >= timeQuanta[i] ) {
-                    if ( i < numQueues - 1 ) {
-                        pcb.QueueLevel = i + 1;
-                        pcb.TimeUsedAtLevel = 0;
-                        queues[i + 1].Enqueue ( pcb );
-                    } else {
-                        // Already at lowest queue, just re-enqueue
-                        pcb.TimeUsedAtLevel = 0;
-                        queues[i].Enqueue ( pcb );
-                    }
-                    return GetNextProcess ( ); // Try next process in this queue
-                } else {
-                    // Not used up time slice, re-enqueue at same level
-                    queues[i].Enqueue ( pcb );
-                    return pcb;
+            if (runningQuantumLeft <= 0) {
+                // Demote if not at lowest queue
+                int level = runningProcess.QueueLevel;
+                if (level < numQueues - 1) {
+                    runningProcess.QueueLevel++;
                 }
+                runningProcess.TimeUsedAtLevel = 0;
+                queues[runningProcess.QueueLevel].Enqueue(runningProcess);
+                runningProcess = null;
+            }
+        }
+    }
+
+    // Returns the currently running process
+    public PCB GetCurrentProcess() {
+        return runningProcess;
+    }
+
+    // Used to get the next process when needed (e.g. after termination)
+    public PCB GetNextProcess() {
+        for (int i = 0; i < numQueues; i++) {
+            if (queues[i].Count > 0) {
+                var pcb = queues[i].Dequeue();
+                return pcb;
             }
         }
         return null;
     }
 
-    public IEnumerable<PCB> GetReadyQueue ( ) {
-        foreach ( var queue in queues )
-            foreach ( var pcb in queue )
+    public IEnumerable<PCB> GetReadyQueue() {
+        foreach (var queue in queues)
+            foreach (var pcb in queue)
                 yield return pcb;
     }
 
-    private void BoostAllProcesses ( ) {
+    private void BoostAllProcesses() {
         // Move all processes to the top queue and reset their time used
-        for ( int i = 1; i < numQueues; i++ ) {
-            while ( queues[i].Count > 0 ) {
-                var pcb = queues[i].Dequeue ( );
+        for (int i = 1; i < numQueues; i++) {
+            while (queues[i].Count > 0) {
+                var pcb = queues[i].Dequeue();
                 pcb.QueueLevel = 0;
                 pcb.TimeUsedAtLevel = 0;
-                queues[0].Enqueue ( pcb );
+                queues[0].Enqueue(pcb);
             }
         }
+    }
+
+    public void ForceSwitch() {
+        runningProcess = null;
     }
 }
