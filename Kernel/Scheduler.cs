@@ -62,7 +62,7 @@ public class MLFQScheduler : IScheduler {
         queues = new List<Queue<PCB>> ( );
         for ( int i = 0; i < numQueues; i++ )
             queues.Add ( new Queue<PCB> ( ) );
-        timeQuanta = quanta ?? new int[] { 10, 20, 40 };
+        timeQuanta = quanta ?? new int[] { 10, 20, 40 }; // 4, 8, 16 
         this.boostInterval = boostInterval;
     }
 
