@@ -33,6 +33,10 @@ public partial class MemoryVisualizer : Node2D {
     public override void _Process ( double delta ) {
     }
 
+    public override void _PhysicsProcess ( double delta ) {
+        QueueRedraw ( );
+    }
+
     public void OnMemoryChanged ( ) {
         UpdateFrameSets ( );
         QueueRedraw ( );
