@@ -156,4 +156,9 @@ public class MLFQScheduler : IScheduler {
     public void ForceSwitch() {
         runningProcess = null;
     }
+
+    public List<Queue<PCB>> GetQueues()
+    {
+        return queues;
+    }
 }

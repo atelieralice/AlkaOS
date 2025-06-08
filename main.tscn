@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dx4yderofy2h5"]
+[gd_scene load_steps=11 format=3 uid="uid://dx4yderofy2h5"]
 
 [ext_resource type="Script" uid="uid://dqndj65lwydeo" path="res://Kernel/Kernel.cs" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://dxqm4tieipcxv" path="res://Main.cs" id="1_uu6xs"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://xbchnacqwgkn" path="res://Utils/AddProcess.cs" id="5_lgr22"]
 [ext_resource type="Theme" uid="uid://bef7cyfdovhtq" path="res://theme.tres" id="6_03owx"]
 [ext_resource type="Script" uid="uid://di50g44kkv1ss" path="res://Utils/SwitchToNextProcess.cs" id="6_trn2v"]
+[ext_resource type="Script" uid="uid://bog6t8shvuwww" path="res://GUI/MLFQVisualizer.cs" id="6_wkp8b"]
 [ext_resource type="Script" uid="uid://dx1apd6unbvm" path="res://Utils/TerminateProcess.cs" id="7_03owx"]
 
 [node name="Main" type="Node2D"]
@@ -30,6 +31,10 @@ script = ExtResource("2_uu6xs")
 [node name="MemoryVisualizer" type="Node2D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("4_cm0pq")
+
+[node name="MLFQVisualizer" type="Node2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_wkp8b")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
