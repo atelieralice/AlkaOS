@@ -103,7 +103,7 @@ public partial class ConcurrencyDemo : Button
     private void StartDemo()
     {
         demoSteps.Clear();
-        var demoLog = GetNodeOrNull<RichTextLabel>("%DemoLog");
+        var demoLog = GetNodeOrNull<RichTextLabel>("%ConsoleOutput");
         if (demoLog != null)
             demoLog.Text = "";
 
@@ -151,7 +151,7 @@ public partial class ConcurrencyDemo : Button
 
     private void AppendDemoLog(string message)
     {
-        var demoLog = GetNodeOrNull<RichTextLabel>("%DemoLog");
+        var demoLog = GetNodeOrNull<RichTextLabel>("%ConsoleOutput");
         if (demoLog != null)
             demoLog.Text += (demoLog.Text.Length > 0 ? "\n" : "") + message;
         else

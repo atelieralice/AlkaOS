@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using AlkaOS.Kernel;
 using AlkaOS.Kernel.Scheduling;
 using System.Linq;
+using AlkaOS.Kernel.FileSystem;
 
 public partial class Main : Node2D {
     private Kernel kernel;
     private Random random = new Random();
+    private FileSystemConsole fsConsole = new();
 
     public override void _Ready() {
         kernel = GetNode<Kernel>("%Kernel");
@@ -28,6 +30,19 @@ public partial class Main : Node2D {
                 if (pidEdit != null && int.TryParse(pidEdit.Text, out int pid))
                     TerminateProcessByPid(pid);
             };
+
+        var input = GetNode<LineEdit>("%ConsoleInput");
+        var output = GetNode<RichTextLabel>("%ConsoleOutput");
+
+        input.TextSubmitted += (string command) =>
+        {
+            var result = fsConsole.Execute(command);
+            // Append command and result to output
+            output.Text += $"> {command}\n";
+            if (!string.IsNullOrEmpty(result))
+                output.Text += result + "\n";
+            input.Text = "";
+        };
     }
 
     // private async Task RunDebugSequence() {

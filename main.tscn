@@ -44,7 +44,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("6_03owx")
 
-[node name="DemoLog" type="RichTextLabel" parent="UI"]
+[node name="ConsoleOutput" type="RichTextLabel" parent="UI"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 680.0
@@ -53,7 +53,7 @@ offset_right = 1128.0
 offset_bottom = 368.0
 scroll_following = true
 
-[node name="Panel" type="Panel" parent="UI/DemoLog"]
+[node name="Panel" type="Panel" parent="UI/ConsoleOutput"]
 show_behind_parent = true
 layout_mode = 0
 offset_right = 448.0
@@ -118,3 +118,11 @@ offset_right = -8.0
 offset_bottom = 31.0
 placeholder_text = "pid
 "
+
+[node name="ConsoleInput" type="LineEdit" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 680.0
+offset_top = 376.0
+offset_right = 888.0
+offset_bottom = 408.0

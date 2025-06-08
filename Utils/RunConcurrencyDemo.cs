@@ -44,7 +44,7 @@ public partial class RunConcurrencyDemo : Button {
     }
 
     private void SetDemoLog(string message) {
-        var demoLog = GetNodeOrNull<RichTextLabel>("%DemoLog");
+        var demoLog = GetNodeOrNull<RichTextLabel>("%ConsoleOutput");
         if (demoLog != null) {
             if (!string.IsNullOrEmpty(demoLog.Text))
                 demoLog.Text += "\n";
