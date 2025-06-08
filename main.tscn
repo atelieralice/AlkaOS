@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dx4yderofy2h5"]
+[gd_scene load_steps=12 format=3 uid="uid://dx4yderofy2h5"]
 
 [ext_resource type="Script" uid="uid://dqndj65lwydeo" path="res://Kernel/Kernel.cs" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://dxqm4tieipcxv" path="res://Main.cs" id="1_uu6xs"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://di50g44kkv1ss" path="res://Utils/SwitchToNextProcess.cs" id="6_trn2v"]
 [ext_resource type="Script" uid="uid://bog6t8shvuwww" path="res://GUI/MLFQVisualizer.cs" id="6_wkp8b"]
 [ext_resource type="Script" uid="uid://dx1apd6unbvm" path="res://Utils/TerminateProcess.cs" id="7_03owx"]
+[ext_resource type="Script" uid="uid://dxnqyr3xk4xp0" path="res://Kernel/Concurrency/ConcurrencyDemo.cs" id="8_20pc6"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_uu6xs")
@@ -50,8 +51,10 @@ offset_left = 680.0
 offset_top = 112.0
 offset_right = 1128.0
 offset_bottom = 368.0
+scroll_following = true
 
 [node name="Panel" type="Panel" parent="UI/DemoLog"]
+show_behind_parent = true
 layout_mode = 0
 offset_right = 448.0
 offset_bottom = 256.0
@@ -66,6 +69,7 @@ offset_right = 1128.0
 offset_bottom = 438.0
 text = "Simulate Concurrency Problem"
 autowrap_mode = 2
+script = ExtResource("8_20pc6")
 
 [node name="GridContainer" type="GridContainer" parent="UI"]
 layout_mode = 0

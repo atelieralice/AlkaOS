@@ -1,10 +1,12 @@
+// The logic is moved to ConcurrencyDemo.cs
+// Not used
 using Godot;
 using System.Threading.Tasks;
 
-public partial class RunConcurrencyDemo : Node2D {
+public partial class RunConcurrencyDemo : Button {
     private string demoLogContents = "";
 
-    public override void _Ready() {
+    public override void _Pressed() {
         _ = RunDemo();
     }
 
@@ -43,9 +45,12 @@ public partial class RunConcurrencyDemo : Node2D {
 
     private void SetDemoLog(string message) {
         var demoLog = GetNodeOrNull<RichTextLabel>("%DemoLog");
-        if (demoLog != null)
-            demoLog.Text = message;
-        else
+        if (demoLog != null) {
+            if (!string.IsNullOrEmpty(demoLog.Text))
+                demoLog.Text += "\n";
+            demoLog.Text += message;
+        } else {
             GD.Print(message);
+        }
     }
 }
