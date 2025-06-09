@@ -5,48 +5,54 @@ using AlkaOS.Kernel.Threading;
 
 namespace AlkaOS.Kernel.Concurrency;
 
-public class ReadersWritersDemo {
+public class ReadersWritersDemo
+{
     private int readers = 0;
-    private int waitingWriters = 0; // Track waiting writers
+    private int waitingWriters = 0;
     private bool writerActive = false;
-    private readonly Lock rwLock = new ( );
-    private readonly ConditionVariable canRead = new ( );
-    private readonly ConditionVariable canWrite = new ( );
+    private readonly Lock rwLock = new();
+    private readonly ConditionVariable canRead = new();
+    private readonly ConditionVariable canWrite = new();
 
     // Reader entry
-    public void StartRead ( SimThread thread ) {
+    public void StartRead(SimThread thread)
+    {
         thread.WaitingReason = "reader"; // For visualizer
-        rwLock.Acquire ( thread );
-        while ( writerActive || waitingWriters > 0 ) { // Block if any writer is waiting
-            canRead.Wait ( rwLock, thread );
-            rwLock.Acquire ( thread ); // reacquire after wait
+        rwLock.Acquire(thread);
+        while (writerActive || waitingWriters > 0)
+        { // Block if any writer is waiting
+            canRead.Wait(rwLock, thread);
+            rwLock.Acquire(thread); // reacquire after wait
         }
         readers++;
-        canRead.Signal ( ); // allow other readers
-        rwLock.Release ( );
+        canRead.Signal(); // allow other readers
+        rwLock.Release();
     }
 
     // Reader exit
-    public void EndRead ( SimThread thread ) {
-        rwLock.Acquire ( thread );
+    public void EndRead(SimThread thread)
+    {
+        rwLock.Acquire(thread);
         readers--;
-        if ( readers == 0 )
-            canWrite.Signal ( ); // let a writer in
-        rwLock.Release ( );
+        if (readers == 0)
+            canWrite.Signal(); // let a writer in
+        rwLock.Release();
     }
 
     // Writer entry
-    public void StartWrite ( SimThread thread ) {
+    public void StartWrite(SimThread thread)
+    {
         thread.WaitingReason = "writer"; // For visualizer
-        rwLock.Acquire ( thread );
+        rwLock.Acquire(thread);
         waitingWriters++;
-        while ( writerActive || readers > 0 ) {
-            canWrite.Wait ( rwLock, thread );
-            rwLock.Acquire ( thread ); // reacquire after wait
+        while (writerActive || readers > 0)
+        {
+            canWrite.Wait(rwLock, thread);
+            rwLock.Acquire(thread); // reacquire after wait
         }
         waitingWriters--;
         writerActive = true;
-        rwLock.Release ( );
+        rwLock.Release();
     }
 
     public bool TryStartWrite(SimThread thread)
@@ -57,24 +63,26 @@ public class ReadersWritersDemo {
         {
             canWrite.Wait(rwLock, thread);
             rwLock.Release();
-            return false; // Could not start writing
+            return false; // if can't start writing
         }
         waitingWriters--;
         writerActive = true;
         rwLock.Release();
-        return true; // Started writing
+        return true; // if can start writing
     }
 
     // Writer exit
-    public void EndWrite ( SimThread thread ) {
-        rwLock.Acquire ( thread );
+    public void EndWrite(SimThread thread)
+    {
+        rwLock.Acquire(thread);
         writerActive = false;
-        canRead.Broadcast ( ); // let all waiting readers in
-        canWrite.Signal ( );   // or let another writer in
-        rwLock.Release ( );
+        canRead.Broadcast(); // let all waiting readers in
+        canWrite.Signal();   // or let another writer in
+        rwLock.Release();
     }
 
-    public void Clear() {
+    public void Clear()
+    {
         rwLock.Clear();
         canRead.Clear();
         canWrite.Clear();
@@ -89,9 +97,8 @@ public partial class ConcurrencyDemo : Button
     private Queue<Action> demoSteps = new();
     private bool isRunning = false;
     private float stepTimer = 0f;
-    private float stepInterval = 1.0f; // seconds
+    private float stepInterval = 1.0f; // in seconds
 
-    // Store the demo instance as a field so we can clear it later
     private ReadersWritersDemo demo;
 
     public override void _Pressed()
@@ -142,7 +149,6 @@ public partial class ConcurrencyDemo : Button
             if (demoSteps.Count == 0)
             {
                 isRunning = false;
-                // CLEANUP: Clear all queues to release references and prevent leaks
                 demo?.Clear();
                 demo = null;
             }

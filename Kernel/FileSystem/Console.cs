@@ -1,19 +1,21 @@
 using System;
-using AlkaOS.Kernel.FileSystem;
 
 namespace AlkaOS.Kernel.FileSystem;
 
-public class FileSystemConsole {
+public class FileSystemConsole
+{
     private readonly SimpleFileSystem fs = new();
 
-    public string Execute(string input) {
+    public string Execute(string input)
+    {
         var parts = input.Trim().Split(' ', 3, StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length == 0) return "";
         var cmd = parts[0];
         var arg1 = parts.Length > 1 ? parts[1] : "";
         var arg2 = parts.Length > 2 ? parts[2] : "";
 
-        return cmd switch {
+        return cmd switch
+        {
             "pwd" => fs.Pwd(),
             "ls" => fs.Ls(),
             "cd" => fs.Cd(arg1),

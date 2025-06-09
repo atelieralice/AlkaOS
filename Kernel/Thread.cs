@@ -1,6 +1,7 @@
 namespace AlkaOS.Kernel.Threading;
 
-public enum ThreadState {
+public enum ThreadState
+{
     NEW,
     READY,
     RUNNING,
@@ -8,14 +9,16 @@ public enum ThreadState {
     TERMINATED
 }
 
-public class SimThread {
+public class SimThread
+{
     public int ThreadID { get; }
     public ThreadState State { get; set; }
     public int ProgramCounter { get; set; }
     public int StackPointer { get; set; }
     public string WaitingReason { get; set; }
 
-    public SimThread ( int threadId ) {
+    public SimThread(int threadId)
+    {
         ThreadID = threadId;
         State = ThreadState.NEW;
         ProgramCounter = 0;

@@ -3,14 +3,17 @@
 using Godot;
 using System.Threading.Tasks;
 
-public partial class RunConcurrencyDemo : Button {
+public partial class RunConcurrencyDemo : Button
+{
     private string demoLogContents = "";
 
-    public override void _Pressed() {
+    public override void _Pressed()
+    {
         _ = RunDemo();
     }
 
-    private async Task RunDemo() {
+    private async Task RunDemo()
+    {
         var demo = new AlkaOS.Kernel.Concurrency.ReadersWritersDemo();
         var reader1 = new AlkaOS.Kernel.Threading.SimThread(1);
         var reader2 = new AlkaOS.Kernel.Threading.SimThread(2);
@@ -43,13 +46,17 @@ public partial class RunConcurrencyDemo : Button {
         demo.EndWrite(writer1);
     }
 
-    private void SetDemoLog(string message) {
+    private void SetDemoLog(string message)
+    {
         var demoLog = GetNodeOrNull<RichTextLabel>("%ConsoleOutput");
-        if (demoLog != null) {
+        if (demoLog != null)
+        {
             if (!string.IsNullOrEmpty(demoLog.Text))
                 demoLog.Text += "\n";
             demoLog.Text += message;
-        } else {
+        }
+        else
+        {
             GD.Print(message);
         }
     }

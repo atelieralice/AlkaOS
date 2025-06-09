@@ -1,5 +1,4 @@
 using Godot;
-using System.Linq;
 
 namespace AlkaOS.GUI;
 
@@ -48,7 +47,8 @@ public partial class MLFQVisualizer : Node2D
                 new Vector2(outlineThickness, 0),
                 new Vector2(0, -outlineThickness),
                 new Vector2(0, outlineThickness)
-            }) {
+            })
+            {
                 DrawString(
                     GetFont(),
                     labelPos + offset,
@@ -60,7 +60,7 @@ public partial class MLFQVisualizer : Node2D
                 );
             }
 
-            // Draw main label in beige
+            // Draw
             DrawString(
                 GetFont(),
                 labelPos,
@@ -78,7 +78,6 @@ public partial class MLFQVisualizer : Node2D
                 float y = q * (rectSize + queueMargin);
                 var rect = new Rect2(x, y, rectSize, rectSize);
                 DrawRect(rect, GetColorForPriority(pcb.Priority));
-                // Optionally, draw PID or process name initial
                 DrawString(GetFont(), new Vector2(x + 3, y + rectSize - 5), pcb.ProcessID.ToString(), HorizontalAlignment.Left, -1, 8, Colors.Black);
                 i++;
             }
