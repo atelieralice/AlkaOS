@@ -126,3 +126,5 @@ offset_left = 680.0
 offset_top = 376.0
 offset_right = 888.0
 offset_bottom = 408.0
+placeholder_text = "Enter command..."
+keep_editing_on_text_submit = true
