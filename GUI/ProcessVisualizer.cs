@@ -33,75 +33,53 @@ public partial class ProcessVisualizer : Node2D {
         if ( kernel == null )
             return;
 
-        // Group processes by state (READY, RUNNING, TERMINATED, etc.)
-        var processes = kernel.GetAllProcesses ( ).ToList ( );
+        var processes = kernel.GetAllProcesses().ToList();
 
-        // Define the desired order
-        string[] stateOrder = { "READY", "RUNNING", "TERMINATED" };
-
-        // Group by state and order by our custom order, unknown states go last
-        var stateGroups = processes
-            .GroupBy ( p => p.State )
-            .OrderBy ( g => {
-                int idx = System.Array.IndexOf ( stateOrder, g.Key.ToString ( ) );
-                return idx == -1 ? int.MaxValue : idx;
-            } )
-            .ToList ( );
+        // Separate processes by state
+        var ready = processes.Where(p => p.State.ToString() == "READY").ToList();
+        var running = processes.Where(p => p.State.ToString() == "RUNNING").ToList();
+        var terminated = processes.Where(p => p.State.ToString() == "TERMINATED").ToList();
 
         float y = margin;
-        foreach ( var group in stateGroups ) {
-            // Draw queue/state label with smaller font size and beige color
-            var labelText = group.Key.ToString ( );
-            var labelPos = new Vector2 ( margin, y - 8 );
-            var labelColor = new Color ( "#F5F5DC" ); // Beige color
 
-            // Only add outline for READY, RUNNING, TERMINATED
-            if ( labelText == "READY" || labelText == "RUNNING" || labelText == "TERMINATED" ) {
-                // Draw very thin black outline (just 4 directions)
-                int outlineThickness = 1;
-                foreach ( var offset in new[] { new Vector2 ( -outlineThickness, 0 ), new Vector2 ( outlineThickness, 0 ), new Vector2 ( 0, -outlineThickness ), new Vector2 ( 0, outlineThickness ) } ) {
-                    DrawString (
-                        GetFont ( ),
-                        labelPos + offset,
-                        labelText,
-                        HorizontalAlignment.Left,
-                        -1,
-                        12,
-                        Colors.Black
-                    );
-                }
-            }
-
-            // Draw main label in beige
-            DrawString (
-                GetFont ( ),
-                labelPos,
-                labelText,
-                HorizontalAlignment.Left,
-                -1,
-                12,
-                labelColor
-            );
-
-            int i = 0;
-            foreach ( var pcb in group ) {
-                float x = margin + i * ( rectWidth + margin );
-                var rect = new Rect2 ( x, y, rectWidth, rectHeight );
-                DrawRect ( rect, GetColorForPriority ( pcb.Priority ) );
-                // Draw process label with smaller font size and beige color
-                DrawString (
-                    GetFont ( ),
-                    new Vector2 ( x + 8, y + rectHeight / 2 + 6 ),
-                    $"{pcb.ProcessName} (PID:{pcb.ProcessID})",
-                    HorizontalAlignment.Left,
-                    -1,
-                    12,
-                    new Color ( "#F5F5DC" )
-                );
-                i++;
-            }
-            y += rectHeight + queueMargin;
+        // Draw READY queue (top left)
+        DrawOutlinedLabel("READY", new Vector2(margin, y - 8));
+        for (int i = 0; i < ready.Count; i++) {
+            float x = margin + i * (rectWidth + margin);
+            var rect = new Rect2(x, y, rectWidth, rectHeight);
+            DrawRect(rect, GetColorForPriority(ready[i].Priority));
+            DrawString(GetFont(), new Vector2(x + 8, y + rectHeight / 2 + 6), $"{ready[i].ProcessName} (PID:{ready[i].ProcessID})", HorizontalAlignment.Left, -1, 12, new Color("#F5F5DC"));
         }
+
+        // Draw RUNNING queue
+        float runningY = y + rectHeight + queueMargin;
+        DrawOutlinedLabel("RUNNING", new Vector2(margin, runningY - 8));
+        for (int i = 0; i < running.Count; i++) {
+            float x = margin + i * (rectWidth + margin);
+            var rect = new Rect2(x, runningY, rectWidth, rectHeight);
+            DrawRect(rect, GetColorForPriority(running[i].Priority));
+            DrawString(GetFont(), new Vector2(x + 8, runningY + rectHeight / 2 + 6), $"{running[i].ProcessName} (PID:{running[i].ProcessID})", HorizontalAlignment.Left, -1, 12, new Color("#F5F5DC"));
+        }
+
+        // Draw TERMINATED queue
+        float terminatedX = margin + Mathf.Max(running.Count, 1) * (rectWidth + margin);
+        DrawOutlinedLabel("TERMINATED", new Vector2(terminatedX, runningY - 8));
+        for (int i = 0; i < terminated.Count; i++) {
+            float x = terminatedX + i * (rectWidth + margin);
+            var rect = new Rect2(x, runningY, rectWidth, rectHeight);
+            DrawRect(rect, GetColorForPriority(terminated[i].Priority));
+            DrawString(GetFont(), new Vector2(x + 8, runningY + rectHeight / 2 + 6), $"{terminated[i].ProcessName} (PID:{terminated[i].ProcessID})", HorizontalAlignment.Left, -1, 12, new Color("#F5F5DC"));
+        }
+    }
+
+    // Helper to draw outlined text
+    private void DrawOutlinedLabel(string text, Vector2 pos) {
+        var labelColor = new Color("#F5F5DC");
+        int outlineThickness = 1;
+        foreach (var offset in new[] { new Vector2(-outlineThickness, 0), new Vector2(outlineThickness, 0), new Vector2(0, -outlineThickness), new Vector2(0, outlineThickness) }) {
+            DrawString(GetFont(), pos + offset, text, HorizontalAlignment.Left, -1, 12, Colors.Black);
+        }
+        DrawString(GetFont(), pos, text, HorizontalAlignment.Left, -1, 12, labelColor);
     }
 
     public override void _PhysicsProcess ( double delta ) {

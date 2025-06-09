@@ -8,17 +8,17 @@ public partial class MLFQVisualizer : Node2D
     private AlkaOS.Kernel.Kernel kernel;
     private AlkaOS.Kernel.Scheduling.MLFQScheduler scheduler;
 
-    private int rectSize = 20;      // Small rectangle size
-    private int margin = 8;         // Margin between rectangles
-    private int queueMargin = 32;   // Vertical space between queues
+    private int rectSize = 20;
+    private int margin = 8;
+    private int queueMargin = 32;
 
     public override void _Ready()
     {
         kernel = GetNode<AlkaOS.Kernel.Kernel>("%Kernel");
-        // Access the scheduler field directly, just like in Kernel.cs
+        // Black magic.
         scheduler = kernel.GetType().GetField("scheduler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
             ?.GetValue(kernel) as AlkaOS.Kernel.Scheduling.MLFQScheduler;
-        Position = new Vector2(184, 223); // Adjust X for your screen width
+        Position = new Vector2(40, 223);
         QueueRedraw();
     }
 
