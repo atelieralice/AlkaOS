@@ -17,7 +17,7 @@ public static class ThreadManager
     // Terminate a thread by ID for a given process
     public static bool TerminateThread(PCB pcb, int threadId)
     {
-        var thread = pcb.Threads.FirstOrDefault(t => t.ThreadID == threadId);
+        var thread = pcb.Threads.FirstOrDefault(t => t.ThreadID == threadId); // Just in case
         if (thread != null)
         {
             thread.State = ThreadState.TERMINATED;
