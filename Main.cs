@@ -4,12 +4,14 @@ using AlkaOS.Kernel;
 using System.Linq;
 using AlkaOS.Kernel.FileSystem;
 
-public partial class Main : Node2D {
+public partial class Main : Node2D
+{
     private Kernel kernel;
     private Random random = new Random();
     private FileSystemConsole fsConsole = new();
 
-    public override void _Ready() {
+    public override void _Ready()
+    {
         kernel = GetNode<Kernel>("%Kernel");
 
         // Connect button signals to methods
@@ -23,7 +25,8 @@ public partial class Main : Node2D {
 
         var terminateButton = GetNodeOrNull<Button>("%TerminateProcess");
         if (terminateButton != null)
-            terminateButton.Pressed += () => {
+            terminateButton.Pressed += () =>
+            {
                 var pidEdit = GetNodeOrNull<TextEdit>("%TerminatePID");
                 if (pidEdit != null && int.TryParse(pidEdit.Text, out int pid))
                     TerminateProcessByPid(pid);
@@ -84,10 +87,12 @@ public partial class Main : Node2D {
     //     WriteProcessInfo.PrintAll(kernel);
     // }
 
-    public void AddRandomProcess() {
+    public void AddRandomProcess()
+    {
         var existingPids = kernel.GetAllProcesses().Select(p => p.ProcessID).ToHashSet();
         int pid;
-        do {
+        do
+        {
             pid = random.Next(1000, 9999);
         } while (existingPids.Contains(pid));
         string[] names = { "Firefox", "Zoom", "Spotify", "VSCode", "Terminal", "Edge", "WhatsApp", "Chrome", "Explorer" };
@@ -97,12 +102,14 @@ public partial class Main : Node2D {
         // WriteProcessInfo.PrintAll(kernel);
     }
 
-    public void SwitchToNextProcess() {
+    public void SwitchToNextProcess()
+    {
         kernel.SwitchProcess();
         // WriteProcessInfo.PrintAll(kernel);
     }
 
-    public void TerminateProcessByPid(int pid) {
+    public void TerminateProcessByPid(int pid)
+    {
         kernel.TerminateProcess(pid);
         // WriteProcessInfo.PrintAll(kernel);
     }
