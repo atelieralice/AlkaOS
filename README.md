@@ -101,7 +101,7 @@ This project includes some third-party assets used for an educational student pr
 
 - Background image: steam_bg.png
   - Source: [素材屋あいりす様](https://sozaiyairis.com/)
-- Project Icon: flask.png
+- Project icon: flask.png
 
 ## Disclaimer
 
