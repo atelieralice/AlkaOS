@@ -1,6 +1,6 @@
 # AlkaOS – Alchemy-Themed OS Simulator
 
-GitHub Repo: https://github.com/atelieralice/AlkaOS
+GitHub Repo URL: https://github.com/atelieralice/AlkaOS
 
 ## Introduction
 
