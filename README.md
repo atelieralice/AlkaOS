@@ -2,6 +2,8 @@
 
 GitHub Repo URL: https://github.com/atelieralice/AlkaOS
 
+![](/AlkaOS_preview.gif "Demonstration")
+
 ## Introduction
 
 Our final project in the third-year Operating Systems course was to build an OS simulator with a theme of our choice.
