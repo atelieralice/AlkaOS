@@ -111,7 +111,7 @@ write <file> <content>  Write to file
 
 ## Running the Project
 
-- Open the project in [Godot Editor (4.5.2)](https://godotengine.org/download/archive/4.5.2-stable/) and press Play.
+- Open the project in [Godot Editor (4.5.2)](https://godotengine.org/download/archive/4.5.2-stable/) with .NET support and press Play.
 - Or grab a precompiled Windows build from [Releases](https://github.com/atelieralice/AlkaOS/releases).
 
 Optional build check (requires .NET 8 SDK):
