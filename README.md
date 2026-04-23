@@ -125,7 +125,7 @@ dotnet build
 This project includes third-party assets used for an educational student project. All rights belong to their respective owners.
 
 - **Background image** (`steam_bg.png`): [素材屋あいりす様](https://sozaiyairis.com/)
-- **Project icon** (`flask.png`)
+- **Project icon** (`flask.png`): Unknown source
 
 ## Disclaimer
 
